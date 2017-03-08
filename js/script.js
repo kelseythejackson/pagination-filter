@@ -122,7 +122,7 @@ searchInput.addEventListener('keypress', (e) => {
    let key = e.which || e.keyCode;
    if(key === 13) {
        getResults();
-       clearSearch();
+
    }
 
 });
