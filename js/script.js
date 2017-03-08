@@ -7,7 +7,8 @@ let numberOfPages = 0,
     paginationList = document.createElement('ul'),
     searchDiv = document.createElement('div'),
     searchInput = document.createElement('input'),
-    searchButton = document.createElement('button');
+    searchButton = document.createElement('button'),
+    noResults = document.createElement('div');
 
 for (let i = 0; i < studentListItems.length; i++) {
     numberOfPages = Math.floor(i / 10) + 1;
@@ -56,9 +57,13 @@ searchDiv.classList.add('student-search');
 searchInput.placeholder = 'Search for students...';
 searchButton.innerText = 'Search';
 searchButton.type = 'submit';
+searchButton.disabled = true;
 searchDiv.appendChild(searchInput);
 searchDiv.appendChild(searchButton);
 pageHeader.appendChild(searchDiv);
+noResults.classList.add('no-results');
+noResults.innerText = 'Sorry, no results...';
+
 
 const getResults = () => {
     const results = document.createElement('ul');
@@ -71,18 +76,43 @@ const getResults = () => {
             listItem += `<li class="student-item cf"><div class="student-details"><img class="avatar" src="${student.children[0].children[0].src}"><h3>${student.children[0].children[1].innerText}</h3><span class="email">${student.children[0].children[2].innerText}</span></div><div class="joined-details"><span class="date">${student.children[1].children[0].innerText}</span></div></li>`;
             // console.log(listItem);
             console.log(student.children[0].children[1].innerText);
+            console.log(listItem.length);
 
-
-        } else {
-            // studentList.innerHTML = 'No Results';
-            console.log('no results');
         }
 
     }
-    results.innerHTML = listItem;
-    page.removeChild(studentList);
-    page.removeChild(pagination);
-    page.appendChild(results);
+
+
+    if(listItem.length > 0) {
+        results.innerHTML = listItem;
+        page.removeChild(studentList);
+        page.removeChild(pagination);
+        page.appendChild(results);
+        clearSearch();
+    } else  {
+        page.removeChild(studentList);
+        page.removeChild(pagination);
+        page.appendChild(noResults);
+        console.log('Nothing Jack!');
+    }
+
+
+
+};
+
+const clearSearch = () => {
+  const clear = document.createElement('span'),
+      results = document.querySelector('.results');
+  clear.classList.add('clear-search');
+  clear.innerText = 'Clear Search X';
+  searchDiv.appendChild(clear);
+
+  clear.addEventListener('click', ()=> {
+      searchDiv.removeChild(clear);
+      page.removeChild(results);
+
+    });
+
 };
 
 
@@ -92,18 +122,24 @@ searchInput.addEventListener('keypress', (e) => {
    let key = e.which || e.keyCode;
    if(key === 13) {
        getResults();
+       clearSearch();
    }
+
 });
 
-searchButton.addEventListener('click', () => {
-    let listItem = '';
-    for(student of studentListItems) {
 
 
 
-        console.log(listItem);
+searchInput.addEventListener('focus', ()=> {
+   searchButton.disabled = false;
+   searchButton.classList.remove('disabled');
+});
+
+searchInput.addEventListener('blur', ()=> {
+    if(searchInput.value === '') {
+        searchButton.disabled = true;
+        searchButton.classList.add('disabled');
     }
-
 
 });
 
