@@ -108,8 +108,9 @@ const clearSearch = () => {
   searchDiv.appendChild(clear);
 
   clear.addEventListener('click', ()=> {
-      searchDiv.removeChild(clear);
-      page.removeChild(results);
+      // searchDiv.removeChild(clear);
+      // page.removeChild(results);
+      location.reload();
 
     });
 
