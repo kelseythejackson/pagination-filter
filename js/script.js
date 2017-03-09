@@ -94,6 +94,7 @@ const getResults = () => {
         page.removeChild(pagination);
         page.appendChild(noResults);
         console.log('Nothing Jack!');
+        clearSearch();
     }
 
 
