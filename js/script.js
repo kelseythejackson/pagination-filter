@@ -10,16 +10,23 @@ let numberOfPages = 0,
     searchButton = document.createElement('button'),
     noResults = document.createElement('div');
 
+// Iterate over the the each student in studentList
 for (let i = 0; i < studentListItems.length; i++) {
+    // assigns a 'page number' to the the numberOfPages variable
     numberOfPages = Math.floor(i / 10) + 1;
     let page = 'page-';
+
+    // appends the page & number of pages variables to each student's li class
     studentListItems[i].classList.add(page + numberOfPages.toString());
 }
 
 
-
+// This adds the class 'pagination' to the pagination div
 pagination.classList.add('pagination');
 
+
+// this for loop iterates over the numberOfPages variable (6)
+// it constructs the the list item then adds it to the paginationList variable
 for (let x = 1; x <= numberOfPages; x++) {
     let paginationListItem = document.createElement('li'),
         link = document.createElement('a');
@@ -33,10 +40,15 @@ for (let x = 1; x <= numberOfPages; x++) {
     paginationList.appendChild(paginationListItem);
 }
 
+// These two lines append the paginationList to the pagination div
+// then the pagination div to the page div
 pagination.appendChild(paginationList);
 page.appendChild(pagination);
 
+// selects all the links in the pagination div
 let links = document.querySelectorAll('ul li a');
+// iterates over the links and adds an event listener to them
+// the links will add the hide class to the, unless it corresponds to the link that is clicked
 for(let k = 0; k < links.length; k++) {
     links[k].addEventListener('click', () => {
         for(student of studentListItems) {
@@ -45,14 +57,16 @@ for(let k = 0; k < links.length; k++) {
                 student.classList.remove('hide');
             }
         }
-
+        // selects the link with the active class
         let lastPage = document.querySelector('.pagination ul li a.active');
+        // remove the active class from the link
         lastPage.classList.remove('active');
+        // add the 'active' class to the link that was clicked
         links[k].classList.add('active');
     }, false);
 }
 
-
+// starts the search functionality
 searchDiv.classList.add('student-search');
 searchInput.placeholder = 'Search for students...';
 searchButton.innerText = 'Search';
@@ -66,10 +80,12 @@ noResults.innerText = 'Sorry, no results...';
 
 
 const getResults = () => {
+    // creates the unordered list to house the results of the search
     const results = document.createElement('ul');
     results.classList.add('results');
     console.log(results);
     let listItem = '';
+    // iterates over the students and builds new list items to add to the results list
     for(student of studentListItems) {
         if(student.children[0].children[1].innerText.includes(searchInput.value)) {
 
@@ -83,13 +99,18 @@ const getResults = () => {
     }
 
 
+    // checks to see if there is anything in the listItem variable
     if(listItem.length > 0) {
+        // if there is, append the list item to the results list
+        // remove the current student list and the pagination
+        // append the results list to the page
         results.innerHTML = listItem;
         page.removeChild(studentList);
         page.removeChild(pagination);
         page.appendChild(results);
         clearSearch();
     } else  {
+        // if it isn't, display the 'results not found' message
         page.removeChild(studentList);
         page.removeChild(pagination);
         page.appendChild(noResults);
@@ -101,6 +122,7 @@ const getResults = () => {
 
 };
 
+// This function clears the search and reload the orginal list of students
 const clearSearch = () => {
   const clear = document.createElement('span'),
       results = document.querySelector('.results');
@@ -118,8 +140,10 @@ const clearSearch = () => {
 };
 
 
-searchButton.addEventListener('click', getResults);
 
+// call the getResults function when the search button is clicked
+searchButton.addEventListener('click', getResults);
+// call the getResults function when the user hits the 'enter' key
 searchInput.addEventListener('keypress', (e) => {
    let key = e.which || e.keyCode;
    if(key === 13) {
@@ -131,12 +155,13 @@ searchInput.addEventListener('keypress', (e) => {
 
 
 
-
+// removes the disabled attribute and class of the search button
 searchInput.addEventListener('focus', ()=> {
    searchButton.disabled = false;
    searchButton.classList.remove('disabled');
 });
 
+// adds the disabled attribute and class of the search button
 searchInput.addEventListener('blur', ()=> {
     if(searchInput.value === '') {
         searchButton.disabled = true;
@@ -148,7 +173,7 @@ searchInput.addEventListener('blur', ()=> {
 
 
 
-
+// starts the page with the first 10 students
 window.onload = links[0].click();
 
 
